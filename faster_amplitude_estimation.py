@@ -7,14 +7,14 @@ class Statistics:
 
 
 class ChernoffBoundEstimator:
-    def estimate(self, cobs, Nshot, delta):
-        diff = math.sqrt(math.log(2.0 / delta) * 12.0 / Nshot)
+    def estimate(self, cobs, n_shot, delta):
+        diff = math.sqrt(math.log(2.0 / delta) * 12.0 / n_shot)
         c_min = max(-1, cobs - diff)
         c_max = min(1, cobs + diff)
         return c_min, c_max
 
     def error(self, Nshot, delta):
-        return math.sqrt(math.log(2.0 / delta) * 12.0 / Nshot)
+        return math.sqrt(math.log(2.0 / delta) * 12.0 / n_shot)
 
 
 class GroverSampler:
@@ -70,13 +70,6 @@ class FasterAmplitudeEstimation:
     def _integer(self, j, rho, theta):
         result = (math.pow(2, j + 1) + 2) * theta - rho + math.pi / 3
         return math.floor(result / (2 * math.pi))
-
-    def _del_rho(self, nu, del_nu, Nsecond, delta):
-        bound_estimator = ChernoffBoundEstimator()
-        cm_error = bound_estimator.error(Nsecond, delta)
-        sin_error = (math.sqrt(2 - 2 * math.cos(del_nu)) + math.fabs(cm_error * math.cos(nu)) + math.fabs(
-            cm_error)) / math.sin(nu)
-        return max(2 * math.fabs(cm_error) + 2 * math.fabs(sin_error), math.fabs(5 * cm_error))
 
     def _estimate_theta(self, sampler, l, delta_c):
         first_stage = True
